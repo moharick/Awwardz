@@ -78,7 +78,6 @@ class Project(models.Model):
 class Review(models.Model):
     CHOICES = (1, 1),(2, 2),(3, 3),(4, 4),(5, 5),(6, 6),(7, 7),(8, 8),(9, 9),(10, 10)
 
-    title= models.CharField(max_length=60)
     design = models.IntegerField(choices=CHOICES,default=0)
     usability= models.IntegerField(choices=CHOICES,default=0)
     content =  models.IntegerField(choices=CHOICES,default=0)
