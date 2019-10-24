@@ -87,3 +87,40 @@ class Project(models.Model):
         identity = Project.objects.get(pk=id)
         return identity
 
+class Review(models.Model):
+    design = models.CharField(max_length=30)
+    usability = models.CharField(max_length=8)
+    creativity = models.CharField(max_length=8,blank=True,null=True)
+    average = models.FloatField(max_length=8)
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null = True)
+    project = models.ForeignKey(Project,on_delete=models.CASCADE,related_name='score',null=True)
+
+
+    def __str__(self):
+        return self.design
+
+    class Meta:
+        ordering = ['-id']
+
+    def save_review(self):
+        self.save()
+
+    @classmethod
+    def get_review(cls, profile):
+        review = Review.objects.filter(Profile__pk = profile)
+        return review
+
+    @classmethod
+    def get_all_reviews(cls):
+        reviews = Review.objects.all()
+        return reviews
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
