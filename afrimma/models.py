@@ -47,54 +47,44 @@ class Profile(models.Model):
     def search_user(cls, name):
         userprof = Profile.objects.filter(user__username__icontains = name)
         return userprof
+
 class Project(models.Model):
-    screenshot = models.ImageField(upload_to = 'images/')
-    project_name = models.CharField(max_length =30)
-    project_url = models.CharField(max_length =50)
-    location = models.CharField(max_length =10)
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null = True,related_name='project')
-    pub_date = models.DateTimeField(auto_now_add=True, null=True)
-    user= models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    title = models.CharField(max_length=150)
+    home_page = models.ImageField(upload_to='photos')
+    description = models.CharField(max_length=255)
+    live_link = models.URLField(max_length=250)
+    design = models.IntegerField(blank=True,default=0)
+    usability = models.IntegerField(blank=True,default=0)
+    content = models.IntegerField(blank=True,default=0)
+    overall = models.IntegerField(blank=True,default=0)
+    posted  = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ['-pk']
+        ordering = ('title',)
+
+    @classmethod
+    def search_project(cls, search_term):
+        projects = cls.objects.filter(title__icontains=search_term)
+        return projects
 
     def save_project(self):
         self.save()
 
-    @classmethod
-    def get_project(cls, profile):
-        project = Project.objects.filter(Profile__pk = profile)
-        return project
 
-    @classmethod
-    def get_all_projects(cls):
-        project = Project.objects.all()
-        return project
-
-    @classmethod
-    def search_by_profile(cls,search_term):
-        projo = cls.objects.filter(profile__name__icontains=search_term)
-        return projo
-
-    @classmethod
-    def get_profile_projects(cls, profile):
-        project = Project.objects.filter(profile__pk = profile)
-        return project
-
-    @classmethod
-    def find_project_id(cls, id):
-        identity = Project.objects.get(pk=id)
-        return identity
+    def __str__(self):
+        return self.title
 
 class Review(models.Model):
-    design = models.CharField(max_length=30)
-    usability = models.CharField(max_length=8)
-    creativity = models.CharField(max_length=8,blank=True,null=True)
-    average = models.FloatField(max_length=8)
-    user = models.ForeignKey(User,on_delete=models.CASCADE,null = True)
-    project = models.ForeignKey(Project,on_delete=models.CASCADE,related_name='score',null=True)
+    CHOICES = (1, 1),(2, 2),(3, 3),(4, 4),(5, 5),(6, 6),(7, 7),(8, 8),(9, 9),(10, 10)
 
+    title= models.CharField(max_length=60)
+    design = models.IntegerField(choices=CHOICES,default=0)
+    usability= models.IntegerField(choices=CHOICES,default=0)
+    content =  models.IntegerField(choices=CHOICES,default=0)
+    overall_score = models.IntegerField(blank=True,default=0)
+    project = models.ForeignKey(Project,on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.design
