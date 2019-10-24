@@ -3,17 +3,19 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import *
 
-class ProjectForm(forms.ModelForm):
+class UploadForm(forms.ModelForm):
     class Meta:
         model = Project
-        exclude = ['user', 'pub_date', 'profile']
+        exclude = ('design', 'usability', 'creativity', 'content', 'overall', 'posted', 'user' )
 
-class ProfileForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        exclude = ['user','score']
+
 
 class ReviewForm(forms.ModelForm):
     class Meta:
-        model =Review
-        exclude= ['user','project']
+        model=Review
+        exclude=['overall_score','profile','project']
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('profile_photo','bio', 'contact')
