@@ -12,7 +12,7 @@ urlpatterns=[
     path('profile/', views.profile, name='profile'),
     path('profile/edit/',views.edit_profile,name='edit'),
     path('new/', views.upload, name='upload'),
-    path('project/(upload)',views.project,name='project'),
+    path('project/<project_id>',views.project,name='project'),
     path('search/', views.search,name='search'),
     path('account/', include('django.contrib.auth.urls')),
     path('logout',views.home,{'next_page': 'accounts/login'}, name='logout'),
