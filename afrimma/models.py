@@ -23,7 +23,7 @@ class Profile(models.Model):
 
 class Project(models.Model):
     title = models.CharField(max_length=150)
-    home_page = models.ImageField(upload_to='photos')
+    home = models.ImageField(upload_to='photos')
     description = models.CharField(max_length=255)
     live_link = models.URLField(max_length=250)
     design = models.IntegerField(blank=True,default=0)
@@ -83,6 +83,3 @@ def create_user_profile(sender, instance, created, **kwargs):
         Profile.objects.create(user=instance)
 
 
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
